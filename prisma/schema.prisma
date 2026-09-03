@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Artist {
+  id           String        @id @default(uuid())
+  name         String
+  avatarUrl    String?
+  mainRole     String?       // Peran Utama (misal: Aktor, Sutradara, Penyanyi)
+  notes        String?
+  links        String?       // JSON string or newline-separated links
+  gallery      String?       // JSON string array or newline-separated gallery image URLs
+  customFields String?       // JSON string storing custom field values
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  videos       VideoArtist[]
+}
+
+model Video {
+  id            String        @id @default(uuid())
+  url           String
+  title         String
+  notes         String?
+  thumbnail     String?
+  embedHtml     String?
+  domain        String?
+  ratingData    String?       // JSON string storing dynamic Folders & Items structure
+  overallRating Float         @default(0)
+  customFields  String?       // JSON string storing custom field values
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  artists       VideoArtist[]
+}
+
+model VideoArtist {
+  videoId      String
+  artistId     String
+  roleStatus   String  @default("Artis Utama") // Snapshot: Status Peran saat entri dibuat
+  weight       Float   @default(100)           // Snapshot: Persentase bobot (%)
+  earnedRating Float   @default(0)             // Snapshot: Nilai aktual yang didapat artis = (overallRating * weight) / 100
+
+  video        Video   @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  artist       Artist  @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@id([videoId, artistId])
+}
+
+model RoleWeightConfig {
+  id         String   @id @default(uuid())
+  roleStatus String   @unique                  // Status Peran (misal: Artis Utama, Aktor, Sutradara)
+  weight     Float    @default(100)            // Skala 0% - 100%
+  isLocked   Boolean  @default(false)          // Lock status (jika locked, tidak terpengaruh Recalculate All)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model CustomFieldConfig {
+  id          String   @id @default(uuid())
+  targetType  String   // "VIDEO" or "ARTIST"
+  name        String
+  description String?
+  fieldType   String   // "SingleChoice" or "MultiChoice" or "Text"
+  options     String?  // Comma-separated or JSON array of options
+  position    Int      @default(0)
+  maxEntries  Int?     // Max allowed entries if applicable
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

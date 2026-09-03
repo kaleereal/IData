@@ -1,0 +1,34 @@
+
+> temp-app@0.1.0 dev
+> next dev
+
+▲ Next.js 16.3.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+✓ Ready in 705ms
+✓ Running next.config.ts took 61ms
+
+○ Compiling / ...
+ GET / 200 in 4.3s (next.js: 4.0s, application-code: 371ms)
+ GET /settings 200 in 941ms (next.js: 842ms, application-code: 99ms)
+ GET /api/custom-fields?targetType=VIDEO 200 in 869ms (next.js: 683ms, application-code: 186ms)
+ GET /api/role-weights 200 in 870ms (next.js: 840ms, application-code: 31ms)
+ GET /api/custom-fields?targetType=VIDEO 200 in 21ms (next.js: 7ms, application-code: 15ms)
+ GET /api/role-weights 200 in 23ms (next.js: 10ms, application-code: 13ms)
+ GET /artists 200 in 438ms (next.js: 283ms, application-code: 155ms)
+ GET /api/artists 200 in 288ms (next.js: 231ms, application-code: 58ms)
+ GET /api/artists 200 in 16ms (next.js: 5ms, application-code: 11ms)
+ GET /artists/compare 200 in 1431ms (next.js: 1364ms, application-code: 67ms)
+ GET /api/artists/compare 404 in 1315ms (next.js: 1284ms, application-code: 32ms)
+ GET /api/artists/compare 404 in 29ms (next.js: 20ms, application-code: 8ms)
+ GET /settings 200 in 68ms (next.js: 10ms, application-code: 58ms)
+ GET /api/custom-fields?targetType=VIDEO 200 in 26ms (next.js: 5ms, application-code: 21ms)
+ GET /api/role-weights 200 in 27ms (next.js: 17ms, application-code: 10ms)
+ GET /api/custom-fields?targetType=VIDEO 200 in 10ms (next.js: 3ms, application-code: 7ms)
+ GET /api/role-weights 200 in 12ms (next.js: 6ms, application-code: 5ms)
+ GET /artists 200 in 52ms (next.js: 6ms, application-code: 46ms)
+ GET /api/artists 200 in 10ms (next.js: 3ms, application-code: 7ms)
+ GET /api/artists 200 in 10ms (next.js: 2ms, application-code: 8ms)
+ GET /artists/compare 200 in 74ms (next.js: 19ms, application-code: 55ms)
+ GET /api/artists/compare 404 in 28ms (next.js: 17ms, application-code: 11ms)
+ GET /api/artists/compare 404 in 13ms (next.js: 5ms, application-code: 8ms)
