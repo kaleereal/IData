@@ -9,6 +9,7 @@
 
 import { DatabaseSchema, FieldMetadata, ScoringTraitMetadata } from '../types';
 import { DEFAULT_DATABASE_SCHEMA } from '../data/defaultSchema';
+import { scanAndSyncUIText } from './dynamicLocalization';
 
 export type FieldDataType = 
   | 'text' 
@@ -1673,9 +1674,18 @@ export function saveStoredMasterTaxonomy(data: MasterTaxonomyData): void {
       })
     );
 
-    // Broadcast custom event for zero-latency cross-component synchronization
+    // Synchronize Master Taxonomy changes into DatabaseSchema
+    const syncedSchema = syncMasterTaxonomyToDatabaseSchema(payload);
+    localStorage.setItem('talent_rating_db_schema_v1', JSON.stringify(syncedSchema));
+    localStorage.setItem('database_schema_v2', JSON.stringify(syncedSchema));
+
+    // Scan & sync UI dictionary texts
+    scanAndSyncUIText();
+
+    // Broadcast custom events for zero-latency cross-component synchronization
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('applet:taxonomy_updated', { detail: payload }));
+      window.dispatchEvent(new CustomEvent('applet:schema_updated', { detail: syncedSchema }));
     }
   } catch (err) {
     console.error('Failed to save master taxonomy to storage:', err);
@@ -2490,6 +2500,49 @@ export function syncMasterTaxonomyToDatabaseSchema(
     if (Object.keys(syncedSpecCats).length > 0) {
       nextSchema.specialtyCategories = syncedSpecCats as any;
       nextSchema.presetSpecialties = allPresetSpecs;
+    }
+  }
+
+  // 9. Sync Scoring Weights & Scoring Traits
+  if (data.scoringSystem) {
+    nextSchema.scoringWeights = {
+      appearanceWeight: data.scoringSystem.appearanceWeightTotal ?? 60,
+      impressionWeight: data.scoringSystem.impressionWeightTotal ?? 40,
+    };
+
+    if (Array.isArray(data.scoringSystem.appearanceWeights) && data.scoringSystem.appearanceWeights.length > 0) {
+      const appTraits = data.scoringSystem.appearanceWeights.map((w) => ({
+        key: w.key,
+        label: w.name.toUpperCase(),
+        category: 'appearance' as const,
+        weight: (w.weightPercent || 15) / 100,
+        weightLabel: `${w.weightPercent || 15}%`,
+        shortDescription: w.description || '',
+        rubricGuide: {
+          sTier: w.guideline || '90-100: Sempurna',
+          aTier: '80-89: Sangat Bagus',
+          bTier: '70-79: Standar Rata-rata',
+          cTier: '<70: Perlu Peningkatan',
+        },
+      }));
+      const impTraits = (data.scoringSystem.impressionWeights || []).map((w) => ({
+        key: w.key,
+        label: w.name.toUpperCase(),
+        category: 'impression' as const,
+        weight: (w.weightPercent || 15) / 100,
+        weightLabel: `${w.weightPercent || 15}%`,
+        shortDescription: w.description || '',
+        rubricGuide: {
+          sTier: w.guideline || '90-100: Sempurna',
+          aTier: '80-89: Sangat Bagus',
+          bTier: '70-79: Standar Rata-rata',
+          cTier: '<70: Perlu Peningkatan',
+        },
+      }));
+      nextSchema.scoringTraits = {
+        appearance: appTraits,
+        impression: impTraits,
+      };
     }
   }
 
