@@ -44,3 +44,9 @@ next-env.d.ts
 *.log
 node_modules
 .next/
+
+.next
+node_modules
+.vercel
+*.log
+/home/jules/verification
