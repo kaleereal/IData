@@ -241,13 +241,24 @@ export const DynamicSchemaPage: React.FC<DynamicSchemaPageProps> = ({
   // FIX: Section Title Update (Do not revert when text is deleted)
   // =========================================================================
   const handleUpdateSectionTitle = (tabKey: DynamicSchemaTab, newTitle: string) => {
-    setDraftSchema(prev => ({
-      ...prev,
-      sectionTitles: {
-        ...(prev.sectionTitles || {}),
-        [tabKey]: newTitle, // stores raw string as typed without falling back
-      },
-    }));
+    setDraftSchema(prev => {
+      const updated = {
+        ...prev,
+        sectionTitles: {
+          ...(prev.sectionTitles || {}),
+          [tabKey]: newTitle,
+        },
+      };
+      onSaveSchema(updated);
+      try {
+        localStorage.setItem('database_schema_v2', JSON.stringify(updated));
+        localStorage.setItem('talent_rating_db_schema_v1', JSON.stringify(updated));
+        window.dispatchEvent(new CustomEvent('applet:schema_updated', { detail: updated }));
+      } catch (e) {
+        console.error('Sync error', e);
+      }
+      return updated;
+    });
   };
 
   // Helper to get Category Record for active character tab
@@ -278,6 +289,14 @@ export const DynamicSchemaPage: React.FC<DynamicSchemaPageProps> = ({
         updated.attributeCategories = { ...(updated.attributeCategories || {}), [key]: newCat };
       } else {
         updated.specialtyCategories = { ...(updated.specialtyCategories || {}), [key]: newCat };
+      }
+      onSaveSchema(updated);
+      try {
+        localStorage.setItem('database_schema_v2', JSON.stringify(updated));
+        localStorage.setItem('talent_rating_db_schema_v1', JSON.stringify(updated));
+        window.dispatchEvent(new CustomEvent('applet:schema_updated', { detail: updated }));
+      } catch (e) {
+        console.error('Sync error', e);
       }
       return updated;
     });
@@ -312,6 +331,14 @@ export const DynamicSchemaPage: React.FC<DynamicSchemaPageProps> = ({
       else if (tab === 'attributes') updated.attributeCategories = targetMap as any;
       else updated.specialtyCategories = targetMap as any;
 
+      onSaveSchema(updated);
+      try {
+        localStorage.setItem('database_schema_v2', JSON.stringify(updated));
+        localStorage.setItem('talent_rating_db_schema_v1', JSON.stringify(updated));
+        window.dispatchEvent(new CustomEvent('applet:schema_updated', { detail: updated }));
+      } catch (e) {
+        console.error('Sync error', e);
+      }
       return updated;
     });
 
@@ -394,6 +421,14 @@ export const DynamicSchemaPage: React.FC<DynamicSchemaPageProps> = ({
       else if (tab === 'attributes') updated.attributeCategories = targetMap as any;
       else updated.specialtyCategories = targetMap as any;
 
+      onSaveSchema(updated);
+      try {
+        localStorage.setItem('database_schema_v2', JSON.stringify(updated));
+        localStorage.setItem('talent_rating_db_schema_v1', JSON.stringify(updated));
+        window.dispatchEvent(new CustomEvent('applet:schema_updated', { detail: updated }));
+      } catch (e) {
+        console.error('Sync error', e);
+      }
       return updated;
     });
 
@@ -430,6 +465,14 @@ export const DynamicSchemaPage: React.FC<DynamicSchemaPageProps> = ({
       else if (tab === 'attributes') updated.attributeCategories = targetMap as any;
       else updated.specialtyCategories = targetMap as any;
 
+      onSaveSchema(updated);
+      try {
+        localStorage.setItem('database_schema_v2', JSON.stringify(updated));
+        localStorage.setItem('talent_rating_db_schema_v1', JSON.stringify(updated));
+        window.dispatchEvent(new CustomEvent('applet:schema_updated', { detail: updated }));
+      } catch (e) {
+        console.error('Sync error', e);
+      }
       return updated;
     });
 

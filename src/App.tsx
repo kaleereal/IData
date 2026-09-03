@@ -38,6 +38,7 @@ import { AlertCircle } from 'lucide-react';
 import { getTranslation, resolveLocalizedSchema } from './utils/i18n';
 import { DEFAULT_APP_SETTINGS } from './types';
 import { syncArtistsWithSchema } from './utils/schemaSync';
+import { getStoredMasterTaxonomy, syncMasterTaxonomyToDatabaseSchema, MasterTaxonomyData } from './utils/taxonomyManager';
 import { BUILTIN_COLOR_THEMES } from './data/themePresets';
 import { applyAppColorThemePreset } from './utils/uiThemeEngine';
 
@@ -119,18 +120,21 @@ export default function App() {
 
   // 2. State for Database Schema (Dynamic database configuration)
   const [schema, setSchema] = useState<DatabaseSchema>(() => {
+    let baseSchema = DEFAULT_DATABASE_SCHEMA;
     const saved = localStorage.getItem(SCHEMA_STORAGE_KEY);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         if (parsed && parsed.fields && parsed.sectionTitles) {
-          return parsed;
+          baseSchema = parsed;
         }
       } catch (e) {
         console.error('Failed to parse stored schema', e);
       }
     }
-    return DEFAULT_DATABASE_SCHEMA;
+    // Synchronize with Master Taxonomy on startup
+    const masterTaxonomy = getStoredMasterTaxonomy();
+    return syncMasterTaxonomyToDatabaseSchema(masterTaxonomy, baseSchema);
   });
 
   // Save Schema changes to localStorage
@@ -149,17 +153,42 @@ export default function App() {
     return () => window.removeEventListener('ui_text_cache_updated', handleUiTextUpdated);
   }, []);
 
-  // Listen to external schema updates from Dynamic Schema editor
+  // Listen to external schema and taxonomy updates
   useEffect(() => {
     const handleSchemaUpdated = (e: Event) => {
       const customEvent = e as CustomEvent<DatabaseSchema>;
       if (customEvent.detail) {
-        setSchema(customEvent.detail);
+        const updatedSchema = customEvent.detail;
+        setSchema(updatedSchema);
+        setArtists(prev => {
+          const synchronized = syncArtistsWithSchema(prev, updatedSchema, schema);
+          localStorage.setItem(ARTISTS_STORAGE_KEY, JSON.stringify(synchronized));
+          return synchronized;
+        });
       }
     };
+
+    const handleTaxonomyUpdated = (e: Event) => {
+      const customEvent = e as CustomEvent<MasterTaxonomyData>;
+      if (customEvent.detail) {
+        const syncedSchema = syncMasterTaxonomyToDatabaseSchema(customEvent.detail, schema);
+        setSchema(syncedSchema);
+        localStorage.setItem(SCHEMA_STORAGE_KEY, JSON.stringify(syncedSchema));
+        setArtists(prev => {
+          const synchronized = syncArtistsWithSchema(prev, syncedSchema, schema);
+          localStorage.setItem(ARTISTS_STORAGE_KEY, JSON.stringify(synchronized));
+          return synchronized;
+        });
+      }
+    };
+
     window.addEventListener('applet:schema_updated', handleSchemaUpdated);
-    return () => window.removeEventListener('applet:schema_updated', handleSchemaUpdated);
-  }, []);
+    window.addEventListener('applet:taxonomy_updated', handleTaxonomyUpdated);
+    return () => {
+      window.removeEventListener('applet:schema_updated', handleSchemaUpdated);
+      window.removeEventListener('applet:taxonomy_updated', handleTaxonomyUpdated);
+    };
+  }, [schema]);
 
   // Resolve Localized Schema: translates standard labels while preserving user DB Editor customizations
   const localizedSchema = useMemo(
