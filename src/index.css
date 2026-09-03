@@ -1,0 +1,387 @@
+@import "tailwindcss";
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+  /* ========================================================================= */
+  /* DESIGN TOKENS (OFFICIAL COLOR PALETTE CSS VARIABLES - DARK THEME STANDARD)*/
+  /* ========================================================================= */
+  --color-bg-app: #0c0a10;
+  --color-surface: #16131c;
+  --color-surface-sub: #201b29;
+  --color-text-main: #f5f3f8;
+  --color-text-muted: #a395a8;
+  --color-primary: #958ab8;
+  --color-primary-hover: #8376aa;
+  --color-primary-light: rgba(149, 138, 184, 0.2);
+  --color-primary-border: rgba(149, 138, 184, 0.4);
+  --color-text-on-primary: #ffffff;
+  --color-secondary: #201b29;
+  --color-text-on-secondary: #f5f3f8;
+  --color-border: #2e273b;
+  --color-border-subtle: #2e273b;
+
+  /* Backward Compatibility Aliases */
+  --app-bg: var(--color-bg-app);
+  --app-card: var(--color-surface);
+  --app-surface: var(--color-surface-sub);
+  --app-border: var(--color-border);
+  --app-text-primary: var(--color-text-main);
+  --app-text-secondary: var(--color-text-muted);
+  --app-text-muted: var(--color-text-muted);
+  --app-primary: var(--color-primary);
+  --app-secondary: var(--color-secondary);
+  --app-accent: var(--color-text-muted);
+  --app-primary-hover: var(--color-primary-hover);
+  --app-primary-light: var(--color-primary-light);
+  --app-primary-border: var(--color-primary-border);
+  --bg-primary: var(--color-bg-app);
+  --bg-card: var(--color-surface);
+  --bg-surface: var(--color-surface-sub);
+  --text-color: var(--color-text-main);
+  --text-primary: var(--color-text-main);
+  --text-secondary: var(--color-text-muted);
+  --border-color: var(--color-border);
+  --primary-color: var(--color-primary);
+  --accent-color: var(--color-text-muted);
+  --sticky-bg: var(--color-bg-app);
+  --app-font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --app-font-scale: 100%;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+}
+
+.dark {
+  --color-bg-app: #0c0a10;
+  --color-surface: #16131c;
+  --color-surface-sub: #201b29;
+  --color-text-main: #f5f3f8;
+  --color-text-muted: #a395a8;
+  --color-primary: #958ab8;
+  --color-primary-hover: #8376aa;
+  --color-primary-light: rgba(149, 138, 184, 0.2);
+  --color-primary-border: rgba(149, 138, 184, 0.4);
+  --color-text-on-primary: #ffffff;
+  --color-secondary: #201b29;
+  --color-text-on-secondary: #f5f3f8;
+  --color-border: #2e273b;
+  --color-border-subtle: #2e273b;
+}
+
+@theme {
+  --color-bg-app: var(--color-bg-app);
+  --color-surface: var(--color-surface);
+  --color-surface-sub: var(--color-surface-sub);
+  --color-text-main: var(--color-text-main);
+  --color-text-muted: var(--color-text-muted);
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-text-on-primary: var(--color-text-on-primary);
+  --color-secondary: var(--color-secondary);
+  --color-text-on-secondary: var(--color-text-on-secondary);
+  --color-border: var(--color-border);
+  --color-border-subtle: var(--color-border);
+
+  /* Theme tokens mapped directly to tailwind utilities so ANY component using standard colors adapts automatically */
+  --color-stone-950: var(--color-bg-app);
+  --color-stone-900: var(--color-surface);
+  --color-stone-850: var(--color-surface-sub);
+  --color-stone-800: var(--color-surface-sub);
+  --color-stone-700: var(--color-border);
+  --color-stone-600: var(--color-text-muted);
+  --color-stone-500: var(--color-text-muted);
+  --color-stone-400: var(--color-text-muted);
+  --color-stone-300: var(--color-text-main);
+  --color-stone-200: var(--color-text-main);
+  --color-stone-100: var(--color-text-main);
+  --color-stone-50: var(--color-text-main);
+
+  --color-zinc-950: var(--color-bg-app);
+  --color-zinc-900: var(--color-surface);
+  --color-zinc-850: var(--color-surface-sub);
+  --color-zinc-800: var(--color-surface-sub);
+  --color-zinc-700: var(--color-border);
+  --color-zinc-600: var(--color-text-muted);
+  --color-zinc-400: var(--color-text-muted);
+  --color-zinc-200: var(--color-text-main);
+  --color-zinc-100: var(--color-text-main);
+
+  --color-slate-950: var(--color-bg-app);
+  --color-slate-900: var(--color-surface);
+  --color-slate-800: var(--color-surface-sub);
+  --color-slate-700: var(--color-border);
+  --color-slate-600: var(--color-text-muted);
+  --color-slate-400: var(--color-text-muted);
+  --color-slate-200: var(--color-text-main);
+  --color-slate-100: var(--color-text-main);
+
+  --color-neutral-950: var(--color-bg-app);
+  --color-neutral-900: var(--color-surface);
+  --color-neutral-850: var(--color-surface-sub);
+  --color-neutral-800: var(--color-surface-sub);
+  --color-neutral-700: var(--color-border);
+  --color-neutral-600: var(--color-text-muted);
+  --color-neutral-400: var(--color-text-muted);
+  --color-neutral-200: var(--color-text-main);
+  --color-neutral-100: var(--color-text-main);
+
+  --color-amber-500: var(--color-primary);
+  --color-amber-400: var(--color-primary);
+  --color-amber-300: var(--color-primary);
+  --color-amber-600: var(--color-primary-hover);
+}
+
+/* Ensure mobile layout never overflows horizontally while allowing position: sticky to work properly */
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  overscroll-behavior-y: auto;
+  overscroll-behavior-x: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  background-color: var(--color-bg-app);
+  color: var(--color-text-main);
+  overflow-x: clip;
+  overscroll-behavior-y: auto;
+  overscroll-behavior-x: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  overflow-x: clip;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Official Global Design Token Utility Classes */
+.bg-app {
+  background-color: var(--color-bg-app) !important;
+}
+
+.bg-surface {
+  background-color: var(--color-surface) !important;
+}
+
+.bg-surface-sub {
+  background-color: var(--color-surface-sub) !important;
+}
+
+.text-main {
+  color: var(--color-text-main) !important;
+}
+
+.text-muted {
+  color: var(--color-text-muted) !important;
+}
+
+.bg-primary {
+  background-color: var(--color-primary) !important;
+}
+
+.text-primary {
+  color: var(--color-primary) !important;
+}
+
+.border-subtle {
+  border-color: var(--color-border) !important;
+}
+
+/* Primary color dynamic utility classes */
+.bg-app-primary {
+  background-color: var(--app-primary) !important;
+}
+
+.text-app-primary {
+  color: var(--app-primary) !important;
+}
+
+.border-app-primary {
+  border-color: var(--app-primary) !important;
+}
+
+.bg-app-primary-light {
+  background-color: var(--app-primary-light) !important;
+}
+
+.border-app-primary-border {
+  border-color: var(--app-primary-border) !important;
+}
+html,
+body,
+#root,
+button,
+input,
+select,
+textarea,
+optgroup,
+option,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div,
+table,
+th,
+td,
+nav,
+header,
+main,
+footer,
+dialog,
+[style*="font-family"] {
+  font-family: var(--app-font-family) !important;
+}
+
+/* Base transitions */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(120, 113, 108, 0.4);
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 113, 108, 0.7);
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: rgba(200, 195, 188, 0.6);
+  border-radius: 9999px;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(160, 155, 148, 0.8);
+}
+
+/* High-performance CSS native virtualization for smooth 60/120 FPS scrolling */
+.card-virtual-item,
+.virtual-scroll-item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 280px;
+  contain: layout style paint;
+}
+
+.virtual-row-item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 76px;
+  contain: layout style paint;
+}
+
+/* Search Highlight and Jump-to-Text Pulse Animations */
+@keyframes searchTargetPulseAnimation {
+  0% {
+    box-shadow: 0 0 0 0 var(--ui-primary, var(--app-primary, #fe9900)), 0 0 30px var(--ui-primary, var(--app-primary, #fe9900));
+    outline: 2px solid var(--ui-primary, var(--app-primary, #fe9900));
+    outline-offset: 4px;
+    transform: scale(1.02);
+    filter: brightness(1.25);
+  }
+  40% {
+    box-shadow: 0 0 0 10px rgba(254, 153, 0, 0.4), 0 0 45px var(--ui-primary, var(--app-primary, #fe9900));
+    outline: 2px solid var(--ui-primary, var(--app-primary, #fe9900));
+    outline-offset: 4px;
+    transform: scale(1.02);
+    filter: brightness(1.2);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent, 0 0 0 transparent;
+    outline: 2px solid transparent;
+    outline-offset: 0px;
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+.search-target-pulse {
+  animation: searchTargetPulseAnimation 2.2s cubic-bezier(0.2, 0.9, 0.3, 1) forwards !important;
+  z-index: 45 !important;
+  position: relative !important;
+  border-color: var(--ui-primary, var(--app-primary, #fe9900)) !important;
+}
+
+.search-highlight-mark {
+  background-color: var(--app-primary-light, rgba(254, 153, 0, 0.3));
+  color: inherit;
+  font-weight: 700;
+  border-radius: 3px;
+  padding: 0px 3px;
+  margin: 0 -1px;
+  border-bottom: 2px solid var(--ui-primary, var(--app-primary, #fe9900));
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  display: inline;
+}
+
+/* Dynamic UI Theme Icon Styling across all Lucide icons */
+svg.lucide {
+  stroke-width: var(--ui-icon-stroke-width, 2);
+  transition: stroke 0.2s ease, filter 0.2s ease;
+}
+
+[data-ui-icon-style="thin_line"] svg.lucide {
+  stroke-width: 1.25 !important;
+}
+
+[data-ui-icon-style="neon_glow"] svg.lucide {
+  stroke-width: 2.25 !important;
+  filter: drop-shadow(0 0 4px var(--ui-primary, #06b6d4));
+}
+
+[data-ui-icon-style="premium_detail"] svg.lucide {
+  stroke-width: 1.75 !important;
+  filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.45));
+}
+
+[data-ui-icon-style="duotone"] svg.lucide {
+  stroke-width: 1.75 !important;
+  filter: drop-shadow(0 0 3px rgba(139, 92, 246, 0.4));
+}
+
+[data-ui-icon-style="compact_functional"] svg.lucide {
+  stroke-width: 1.75 !important;
+}
